@@ -51,12 +51,10 @@ class EyeDataset(Dataset):
         with open(p_sx, "rb") as sx, open(p_dx, "rb") as dx:
             isx = Image.open(sx)
             idx = Image.open(dx)
-            isx = isx.resize((self.isize, self.isize))
-            idx = idx.resize((self.isize, self.isize))
-            img = get_concat_v(isx, idx)
             if self.transform_img is not None:
-                img = self.transform_img(img)
+                idx = self.transform_img(idx)
+                isx = self.transform_img(isx)
         clinical = torch.tensor(clinical.astype(np.float32).values)
-        data = {'CT': img, 'Clinical': clinical}
+        data = {'SX': isx, 'DX': idx, 'Clinical': clinical}
         return data, label
 
